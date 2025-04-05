@@ -1,8 +1,8 @@
-﻿python-dotenv==1.0.1
+python-dotenv==1.0.1
 requests==2.31.0
 langchain==0.1.17
-langchain-community==0.0.21
+langchain-community==0.0.36
 langchain-experimental==0.0.20
 pyowm==3.3.0
-serpapi
+serpapi==0.1.5
 Flask==2.3.3
