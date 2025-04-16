@@ -6,4 +6,5 @@ langchain-experimental==0.0.20
 pyowm==3.3.0
 serpapi==0.1.5
 Flask==2.3.3
+langchain-experimental
 gunicorn
