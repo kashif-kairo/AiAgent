@@ -210,6 +210,8 @@ class AIAgent:
                 return "Oops! 🙈 Something went wrong on my end. Let's try that again!"
 
 if __name__ == "__main__":
+    threading.Thread(target=start_flask).start()
+    
     agent = AIAgent()
     print("🤖 Welcome! How can I help you today?")
     while True:
