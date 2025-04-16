@@ -8,5 +8,5 @@ serpapi==0.1.5
 Flask==2.3.3
 langchain
 langchain-experimental
-langchain_experimental.utilities'
+langchain_experimental.utilities
 gunicorn
