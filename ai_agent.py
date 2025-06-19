@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 import requests
 import json
+import threading  # <-- Add this line
 from langchain.agents import Tool, initialize_agent
 from langchain.agents.agent_types import AgentType
 from langchain_community.utilities import SerpAPIWrapper, WikipediaAPIWrapper
@@ -15,7 +16,7 @@ SERPAPI_API_KEY = "3f6e8841f475bd9b01b664ad5dacd40e281dc7a6cd8170c670a2bf571e797
 
 # OpenRouter API configuration
 API_URL = "https://openrouter.ai/api/v1/chat/completions"
-OPENROUTER_API_KEY = "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"
+OPENROUTER_API_KEY = "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"
 headers = {
     "Authorization": f"Bearer {OPENROUTER_API_KEY}",
     "Content-Type": "application/json",
@@ -26,11 +27,25 @@ headers = {
 # Add OpenWeather API key
 OPENWEATHER_API_KEY = "56470b054a80bc9a6b5b8b2367fb5980"  # Replace with your API key
 
+class NewsFetcher:
+    def __init__(self, api_key):
+        self.api_key = api_key
+
+    def get_news(self, query="latest"):
+        url = f"https://newsapi.org/v2/everything?q={query}&apiKey={self.api_key}"
+        try:
+            response = requests.get(url)
+            data = response.json()
+            return [{"title": article["title"], "url": article["url"]} for article in data["articles"][:5]]
+        except Exception as e:
+            return f"Error fetching news: {str(e)}"
+
 class AIAgent:
     def __init__(self):
-        self.tools = self._initialize_tools()
         self.owm = OWM(OPENWEATHER_API_KEY)
-        
+        self.news_fetcher = NewsFetcher("cd82295c6f5e46a5a3d6a2b7f6a1e3fc")  # <-- Initialize this first
+        self.tools = self._initialize_tools()
+    
     def get_weather(self, location):
         try:
             mgr = self.owm.weather_manager()
@@ -119,7 +134,13 @@ class AIAgent:
                 - Planning weather-dependent activities""",
         )
         
-        return [calculator, search, weather_tool]
+        news_tool = Tool(
+            name="NewsFetcher",
+            func=self.news_fetcher.get_news,
+            description="Use for getting latest or topic-specific news."
+        )
+
+        return [calculator, search, weather_tool, news_tool]
 
     def process_message(self, user_input):
         try:
@@ -210,7 +231,7 @@ class AIAgent:
                 return "Oops! 🙈 Something went wrong on my end. Let's try that again!"
 
 if __name__ == "__main__":
-    threading.Thread(target=start_flask).start()
+    # threading.Thread(target=start_flask).start()
     
     agent = AIAgent()
     print("🤖 Welcome! How can I help you today?")
