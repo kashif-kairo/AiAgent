@@ -61,6 +61,10 @@ This isn’t just a chatbot.
 
 ## 📸 Screenshots 
 ![Billu Screenshot](assest/ss1.png)
+![Billu Screenshot](assest/ss2.png)
+![Billu Screenshot](assest/ss3.png)
+![Billu Screenshot](assest/ss4.png)
+
 
 ---
 
